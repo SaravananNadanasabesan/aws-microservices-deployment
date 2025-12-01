@@ -1,0 +1,32 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "ca-central-1"
+    IMAGE_REPO_NAME: "nadanasabesan-ecs-app"
+
+phases:
+  pre_build:
+    commands:
+      - echo "Getting AWS account ID..."
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME
+      - echo "Logging into Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+  build:
+    commands:
+      - echo "Building Docker image..."
+      - docker build -t $IMAGE_REPO_NAME .
+      - docker tag $IMAGE_REPO_NAME:latest $REPOSITORY_URI:latest
+
+  post_build:
+    commands:
+      - echo "Pushing image to ECR..."
+      - docker push $REPOSITORY_URI:latest
+      - echo "Writing imagedefinitions.json for ECS deployment..."
+      - printf '[{"name":"app","imageUri":"%s"}]' "$REPOSITORY_URI:latest" > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
