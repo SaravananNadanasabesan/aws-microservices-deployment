@@ -50,7 +50,7 @@ variable "github_branch" {
 variable "codestar_connection_arn" {
   description = "AWS CodeStar connection ARN for GitHub (create in console first)"
   type        = string
-  default     = "arn:aws:codeconnections:ca-central-1:794038224942:connection/f14a609e-775d-43bf-bc54-e0bab61dc41d"
+  default     = "arn:aws:codeconnections:ca-central-1:794038224942:connection/ba04ce06-17a6-4075-baed-d45e6eb87a9e"
 }
 
 ############################

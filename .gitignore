@@ -1,0 +1,21 @@
+# Terraform provider plugins (never push)
+.terraform/
+
+# Terraform state files (contain credentials & infra data)
+terraform.tfstate
+terraform.tfstate.backup
+
+# Lock files - not needed in repo
+.terraform.lock.hcl
+
+# Crash/plan/cache files
+crash.log
+*.tfvars
+*.tfvars.json
+*.plan
+
+# Python cache
+__pycache__/
+
+# Build artifacts
+*.exe
